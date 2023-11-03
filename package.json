@@ -6,7 +6,7 @@
   "scripts": {
     "build": "esbuild demo.ts --bundle --outfile=demo.js --platform=node",
     "demo": "npm run build && node demo.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "esbuild tests/basic.ts --bundle --outfile=tests/basic.js --platform=node && node tests/basic.js"
   },
   "keywords": [],
   "author": "",
