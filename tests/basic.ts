@@ -19,7 +19,10 @@ test("mainline, no synonyms, no repeats", (t) => {
 
   // this will always be true, even when we have repeats: key must be unique
   const keyToText = reverse(textToKeys);
-  t.ok(Object.values(keyToText).every((v) => v.length === 1));
+  t.ok(
+    Object.values(keyToText).every((v) => v.length === 1),
+    "unique keys"
+  );
 
   // a has no predecessors
   t.equal(keyToPrev[textToKeys.a[0]], undefined);
@@ -37,13 +40,6 @@ test("mainline with repeats", (t) => {
 
   const { textToKeys, keyToPrev } = sentenceToGraph(sentence);
 
-  // this will always be true, even when we have repeats: key must be unique
-  const keyToText = reverse(textToKeys);
-  t.ok(
-    Object.values(keyToText).every((v) => v.length === 1),
-    "unique keys"
-  );
-
   t.false(keyToPrev[textToKeys.a[0]], "first a, no prefix");
   t.deepEqual(keyToPrev[textToKeys.a[1]], textToKeys.c, "second a, c prefix");
   t.deepEqual(keyToPrev[textToKeys.b[0]], [textToKeys.a[0]]);
@@ -51,6 +47,10 @@ test("mainline with repeats", (t) => {
 
   t.equal(textToKeys["a"].length, 2);
 
+  t.ok(
+    Object.values(reverse(textToKeys)).every((v) => v.length === 1),
+    "unique keys"
+  );
   t.end();
 });
 
@@ -63,13 +63,6 @@ test("basic synomym", (t) => {
 
   const { textToKeys, keyToPrev } = sentenceToGraph(sentence);
 
-  // this will always be true, even when we have repeats: key must be unique
-  const keyToText = reverse(textToKeys);
-  t.ok(
-    Object.values(keyToText).every((v) => v.length === 1),
-    "unique keys"
-  );
-
   t.deepEqual(
     keyToPrev[textToKeys.x[0]],
     textToKeys.a,
@@ -81,6 +74,59 @@ test("basic synomym", (t) => {
     keyToPrev[textToKeys.d[0]].slice().sort(),
     [textToKeys.c[0], textToKeys.z[0]].sort(),
     "d has mainline AND synonym prefixes!"
+  );
+
+  t.ok(
+    Object.values(reverse(textToKeys)).every((v) => v.length === 1),
+    "unique keys"
+  );
+  t.end();
+});
+
+test("synomym not aligned with morpheme boundary", (t) => {
+  const badSentence: Sentence = {
+    ...superfluous,
+    furigana: ["a", "Bb", "c", "d"],
+    synonyms: { bc: ["x", "y", "z"] },
+  };
+
+  t.throws(() => sentenceToGraph(badSentence));
+  t.end();
+});
+
+test("partial synomyms ignored", (t) => {
+  const okSentence: Sentence = {
+    ...superfluous,
+    furigana: ["a", "b", "bc", "cbd"],
+    synonyms: { b: ["x", "y", "z"] },
+  };
+
+  t.ok(sentenceToGraph(okSentence), "synonym repeating only partially ok");
+  t.end();
+});
+
+test("multiply-occurring synonym ok", (t) => {
+  const sentence: Sentence = {
+    ...superfluous,
+    furigana: ["a", "b", "c", "b"],
+    synonyms: { b: ["x", "y", "z"] },
+  };
+
+  const { textToKeys, keyToPrev } = sentenceToGraph(sentence);
+  t.deepEqual(
+    textToKeys.b.flatMap((b) => keyToPrev[b]).sort(),
+    [textToKeys.a[0], textToKeys.c[0]].sort(),
+    "mainline parents"
+  );
+  t.deepEqual(
+    textToKeys.x.flatMap((x) => keyToPrev[x]).sort(),
+    [textToKeys.a[0], textToKeys.c[0]].sort(),
+    "synonym parents"
+  );
+
+  t.ok(
+    Object.values(reverse(textToKeys)).every((v) => v.length === 1),
+    "unique keys"
   );
 
   t.end();

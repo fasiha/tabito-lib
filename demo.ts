@@ -72,8 +72,14 @@ const demo: Sentence = {
   },
 };
 
-const res = sentenceToGraph(demo);
-writeFile("demo.dot", treeToDot(res.keyToPrev, res.textToKeys));
-console.log(`Output demo.dot
+export function sentenceToDot(sentence: Sentence, outfile = "demo.dot") {
+  const res = sentenceToGraph(sentence);
+  writeFile(outfile, treeToDot(res.keyToPrev, res.textToKeys));
+  console.log(`Output ${outfile}
 Now run
-$ dot -Tpng demo.dot > demo.png`);
+$ dot -Tpng ${outfile} > ${outfile}.png`);
+}
+
+if (module === require.main) {
+  sentenceToDot(demo, "demo.dot");
+}

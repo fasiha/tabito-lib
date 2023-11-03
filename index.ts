@@ -1,13 +1,39 @@
 import type { Furigana, Sentence, Tree } from "./interfaces";
 import { findOccurrences, insert } from "./utils";
 
+/**
+ * Ensures all synonyms are present and along furigana boundaries
+ */
 export function validateSynonyms(sentence: Sentence): boolean {
-  const rawRuby = sentence.furigana
-    .map((f) => (typeof f === "string" ? f : f.ruby))
-    .join("");
-  return sentence.synonyms
-    ? Object.keys(sentence.synonyms).every((key) => rawRuby.includes(key))
-    : true;
+  const rawRubies = sentence.furigana.map((f) =>
+    typeof f === "string" ? f : f.ruby
+  );
+  const rawRuby = rawRubies.join("");
+
+  const charToMorphemeIdx = rawRubies.flatMap((str, idx) =>
+    Array.from({ length: str.length }, () => idx)
+  );
+
+  for (const synonym in sentence.synonyms) {
+    const start = rawRuby.indexOf(synonym);
+    if (start < 0) return false;
+    const end = start + synonym.length - 1;
+    // start and end are character indexes
+
+    // the character before this synonym (if it exists) has to be in a different morpheme than
+    // the first character of the synonym
+    if (start > 0 && charToMorphemeIdx[start] === charToMorphemeIdx[start - 1])
+      return false;
+
+    // similarly, the character after this synonym (if it exists) has to be in a different
+    // morpheme than the synonym's last character
+    if (
+      end < rawRuby.length - 1 && // not last character?
+      charToMorphemeIdx[end] === charToMorphemeIdx[end + 1]
+    )
+      return false;
+  }
+  return true;
 }
 
 // records must have the mainline sentence furigana loaded
@@ -29,6 +55,7 @@ function parseSynonyms(
   for (const [source, dest] of Object.entries(sentence.synonyms ?? {})) {
     const starts = findOccurrences(rawRuby, source);
     if (starts.length === 0) {
+      // this should never happen since `validateSynonyms` runs earlier
       throw new Error("synonym not found in raw sentence? " + source);
     }
     for (const start of starts) {
