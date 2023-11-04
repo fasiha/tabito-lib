@@ -16,6 +16,16 @@ export function reverse(input: Tree): Tree {
   }
   return ret;
 }
+export function reverseUniq(input: Tree): Record<string, string> {
+  const ret: Record<string, string> = {};
+  for (const k in input) {
+    for (const v of input[k]) {
+      if (v in ret) throw new Error("non-unique values");
+      ret[v] = k;
+    }
+  }
+  return ret;
+}
 
 function cumulativeSum(v: number[]): number[] {
   const ret = v.slice();
@@ -42,4 +52,18 @@ function findNumOccurrences(haystack: string, needle: string): number {
     hits++;
   }
   return hits;
+}
+export function max<T>(v: T[], map: (x: T) => number): T {
+  if (v.length === 0) throw new Error("empty");
+  let bestX = v[0];
+  let bestY = map(bestX);
+  //TODO make this iterator so we don't scan the first twice and don't slice (allocate new array)
+  for (const x of v) {
+    const y = map(x);
+    if (y > bestY) {
+      bestY = y;
+      bestX = x;
+    }
+  }
+  return bestX;
 }

@@ -8,3 +8,10 @@ export interface Sentence {
 }
 
 export type Tree = Record<string, string[]>;
+
+export interface Graph {
+  keyToNext: Tree;
+  textToKeys: Tree;
+  keyToPrev: Tree;
+  keyToText: Record<string, string>;
+}

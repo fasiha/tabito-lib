@@ -2,3 +2,4 @@ node_modules/
 *.dot
 *.js
 *.png
+.DS_Store

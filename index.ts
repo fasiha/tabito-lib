@@ -1,5 +1,6 @@
-import type { Furigana, Sentence, Tree } from "./interfaces";
-import { findOccurrences, insert } from "./utils";
+import type { Furigana, Graph, Sentence, Tree } from "./interfaces";
+import { max } from "./utils";
+import { findOccurrences, insert, reverse, reverseUniq } from "./utils";
 
 /**
  * Ensures all synonyms are present and along furigana boundaries
@@ -146,7 +147,7 @@ function insertFurigana({
   return keysGenerated;
 }
 
-export function sentenceToGraph(sentence: Sentence) {
+export function sentenceToGraph(sentence: Sentence): Graph {
   if (!validateSynonyms(sentence)) {
     throw new Error("wat");
   }
@@ -167,28 +168,10 @@ export function sentenceToGraph(sentence: Sentence) {
 
   // Now add synonyms
   parseSynonyms(sentence, textToKeys, keyToPrev);
-  return { textToKeys, keyToPrev };
+  return {
+    textToKeys,
+    keyToPrev,
+    keyToText: reverseUniq(textToKeys),
+    keyToNext: reverse(keyToPrev),
+  };
 }
-
-type ReportState = "correct" | "misplaced" | "wrong";
-type Report = { text: string; state: ReportState }[];
-
-// export function generateReport(proposal: string, sentence: Sentence): Report {
-//   // create synonyms
-//   const synonymsToOriginal = reverse(sentence.synonyms ?? {});
-//   for (const fv of sentence.furigana) {
-//     for (const f of fv) {
-//       if (typeof f !== "string") {
-//         if (!(f.rt in synonymsToOriginal)) {
-//           synonymsToOriginal[f.rt] = [];
-//         }
-//         synonymsToOriginal[f.rt].push(f.ruby);
-//       }
-//     }
-//   }
-
-//   //
-//   const target = sentence.furigana
-//     .flatMap((fv) => fv.map((f) => (typeof f === "string" ? f : f.ruby)))
-//     .join("");
-// }
