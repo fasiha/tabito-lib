@@ -7,7 +7,7 @@ and follow instructions
 */
 
 import { sentenceToGraph } from ".";
-import { findGreedyPath } from "./graphSearch";
+import { chunkInput } from "./graphSearch";
 import type { Sentence, Tree } from "./interfaces";
 import { reverse } from "./utils";
 import { writeFile } from "fs/promises";
@@ -83,20 +83,6 @@ $ dot -Tpng ${outfile} > ${outfile}.png`);
 
 if (module === require.main) {
   sentenceToDot(demo, "demo.dot");
-
-  const fake: Sentence = {
-    furigana: ["a", "b", "c", "d"],
-    synonyms: { bc: ["x", "y", "b"] },
-    english: [""],
-    citation: "",
-  };
-  sentenceToDot(fake, "fake.dot");
-
-  const graph = sentenceToGraph(fake);
-  for (const input of "a,abc,abec,aebc,abcd,abcdefg,x,xy,ybd,dqq,bcd,bdq".split(
-    ","
-  )) {
-    console.log("# " + input);
-    console.log(findGreedyPath(input, graph));
-  }
+  const graph = sentenceToGraph(demo);
+  console.log(chunkInput("しゃしん田たくさんとった", graph));
 }

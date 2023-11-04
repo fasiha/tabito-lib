@@ -3,15 +3,14 @@ import { type Sentence } from "../interfaces";
 import { sentenceToGraph } from "..";
 import { findGreedyPath } from "../graphSearch";
 
-const fake: Sentence = {
-  furigana: ["a", "b", "c", "d"],
-  synonyms: { bc: ["x", "y", "b"] },
-  english: [""],
-  citation: "",
-};
-const graph = sentenceToGraph(fake);
-
 test("greedy search", (t) => {
+  const fake: Sentence = {
+    furigana: ["a", "b", "c", "d"],
+    synonyms: { bc: ["x", "y", "b"] },
+    english: [""],
+    citation: "",
+  };
+  const graph = sentenceToGraph(fake);
   const arrEqual = (a: string[], b: string[]) =>
     t.deepEqual(a.sort(), b.sort());
   arrEqual(findGreedyPath("a", graph), ["a"]);
@@ -30,5 +29,17 @@ test("greedy search", (t) => {
 
   arrEqual(findGreedyPath("q", graph), []);
 
+  t.end();
+});
+
+test("hiragana normalization: return is same form as input even during background normalization", (t) => {
+  const sentence: Sentence = {
+    furigana: ["ラーメン", "が", "たべたい"],
+    english: [""],
+    citation: "",
+  };
+  const graph = sentenceToGraph(sentence);
+  const input = "らーめんがタべたい";
+  t.deepEqual(findGreedyPath(input, graph), [input]);
   t.end();
 });
