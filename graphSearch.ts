@@ -1,4 +1,4 @@
-import { type Graph } from "./interfaces";
+import { Chunk, type Graph } from "./interfaces";
 import { kata2hira } from "./kana";
 import { longest, max } from "./utils";
 
@@ -36,7 +36,6 @@ function followGreedy(input: string, startKey: string, graph: Graph): string {
     keyToNext[startKey]?.filter((key) =>
       inputHiragana.startsWith(headHiragana + kata2hira(keyToText[key]))
     ) ?? [];
-
   const headAsInput = input.slice(0, head.length);
 
   // base case (2) end of graph
@@ -46,8 +45,8 @@ function followGreedy(input: string, startKey: string, graph: Graph): string {
   return headAsInput + followGreedy(input.slice(head.length), bestKey, graph);
 }
 
-export function chunkInput(input: string, graph: Graph) {
-  const chunks: { text: string; status: "unknown" | "ok" }[] = [];
+export function chunkInput(input: string, graph: Graph): Chunk[] {
+  const chunks: Chunk[] = [];
   let rest = input;
   while (rest) {
     const hits = findGreedyPath(rest, graph);

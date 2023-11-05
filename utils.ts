@@ -1,10 +1,17 @@
 import type { Tree } from "./interfaces";
 
-export function insert(db: Tree, newKey: string, newVal: string): void {
+export function insert(
+  db: Tree,
+  newKey: string,
+  newVal: string,
+  dedupe = false
+): void {
   if (!(newKey in db)) {
     db[newKey] = [];
   }
-  db[newKey].push(newVal);
+  if (dedupe ? !db[newKey].includes(newVal) : true) {
+    db[newKey].push(newVal);
+  }
 }
 
 export function reverse(input: Tree): Tree {

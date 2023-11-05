@@ -15,3 +15,8 @@ export interface Graph {
   keyToPrev: Tree;
   keyToText: Record<string, string>;
 }
+
+export interface Chunk {
+  text: string;
+  status: "unknown" | "ok";
+}

@@ -52,7 +52,6 @@ function parseSynonyms(
   const entryNumber = rawRubies.flatMap((str, idx) =>
     Array.from({ length: str.length }, () => idx)
   );
-
   for (const [source, dest] of Object.entries(sentence.synonyms ?? {})) {
     const starts = findOccurrences(rawRuby, source);
     if (starts.length === 0) {
@@ -67,10 +66,10 @@ function parseSynonyms(
       const endFuriganaIdx = entryNumber[end];
       // these are furigana indexes
 
-      let previousKeys: string[] =
-        startFuriganaIdx > 0
-          ? mainlineKeys(sentence, startFuriganaIdx - 1)
-          : [];
+      let previousKeys: string[] = mainlineKeys(
+        sentence,
+        startFuriganaIdx
+      ).flatMap((key) => keyToPrev[key] ?? []);
       for (const [fidx, f] of dest.entries()) {
         previousKeys = insertFurigana({
           f,
@@ -80,6 +79,7 @@ function parseSynonyms(
           keyToPrev,
         });
       }
+      // outflow: mainline
       if (sentence.furigana[endFuriganaIdx + 1]) {
         for (const nextKey of mainlineKeys(sentence, endFuriganaIdx + 1)) {
           for (const prevKey of previousKeys) {
@@ -87,9 +87,25 @@ function parseSynonyms(
           }
         }
       }
+      // outflow: others
+      const mainlineOutflows = mainlineKeys(sentence, endFuriganaIdx);
+      const allOutflows = Object.entries(keyToPrev)
+        .filter(([, parents]) =>
+          mainlineOutflows.some((targetParent) =>
+            parents.includes(targetParent)
+          )
+        )
+        .map(([key]) => key);
+
+      for (const nextKey of allOutflows) {
+        for (const prevKey of previousKeys) {
+          insert(keyToPrev, nextKey, prevKey, DEDUPE_PLEASE);
+        }
+      }
     }
   }
 }
+const DEDUPE_PLEASE = true;
 
 function mainlineKeys(sentence: Sentence, currentIndex: number): string[] {
   if (currentIndex < 0 || currentIndex >= sentence.furigana.length) {

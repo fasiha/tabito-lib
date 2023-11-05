@@ -9,7 +9,7 @@
     "demo": "npm run build && node demo.js",
     "test:slow": "npm run build:tsc && tape 'tests/*js'",
     "test:broken-not-sure-why": "esbuild tests/*.ts --bundle --outdir=tests --platform=node && tape 'tests/*js'",
-    "test": "esbuild tests/*.ts --bundle --outdir=tests --platform=node && find tests -name '*.js' | xargs -L1 node || echo TESTS FAILED - TESTS FAILED - TESTS FAILED"
+    "test": "npm run build && esbuild tests/*.ts --bundle --outdir=tests --platform=node && find tests -name '*.js' | xargs -L1 node || echo TESTS FAILED - TESTS FAILED - TESTS FAILED"
   },
   "keywords": [],
   "author": "",

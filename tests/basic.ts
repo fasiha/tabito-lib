@@ -131,3 +131,19 @@ test("multiply-occurring synonym ok", (t) => {
 
   t.end();
 });
+
+test("multiple synonyms should link to each other", (t) => {
+  const sentence: Sentence = {
+    ...superfluous,
+    furigana: "abcd".split(""),
+    synonyms: { bc: "xyz".split(""), c: ["1"], d: ["e"] },
+  };
+  const { textToKeys, keyToPrev, keyToText } = sentenceToGraph(sentence);
+
+  const eParents = textToKeys.e
+    .flatMap((e) => keyToPrev[e].map((key) => keyToText[key]))
+    .sort();
+  t.deepEqual(eParents, ["1", "c", "z"].sort());
+
+  t.end();
+});

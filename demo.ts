@@ -37,7 +37,7 @@ ${links.join("\n")}
 }`.replace(/\//g, "_");
 }
 
-const demo: Sentence = {
+export const demo: Sentence = {
   furigana: [
     [
       { ruby: "京", rt: "きょう" },
@@ -82,7 +82,31 @@ $ dot -Tpng ${outfile} > ${outfile}.png`);
 }
 
 if (module === require.main) {
-  sentenceToDot(demo, "demo.dot");
+  // sentenceToDot(demo, "demo.dot");
   const graph = sentenceToGraph(demo);
-  console.log(chunkInput("しゃしん田たくさんとった", graph));
+  // console.log(chunkInput("しゃしん田たくさんとった", graph));
+  console.log(chunkInput("たくさんとった", graph));
+
+  function aFollowsB(a: string, b: string): boolean {
+    return graph.textToKeys[a]
+      .flatMap((o) => graph.keyToNext[o])
+      .map((key) => graph.keyToText[key])
+      .includes(b);
+  }
+
+  console.log(
+    aFollowsB("たくさん", "と"),
+    aFollowsB("と", "っ"),
+    aFollowsB("っ", "た")
+  );
+
+  // sentenceToDot(
+  //   {
+  //     english: [""],
+  //     citation: "",
+  //     furigana: "abcd".split(""),
+  //     synonyms: { bc: "xyz".split(""), d: ["e"], c: ["CcC"], a: ["AAA"] },
+  //   },
+  //   "fake.dot"
+  // );
 }
