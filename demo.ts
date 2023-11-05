@@ -73,6 +73,13 @@ export const demo: Sentence = {
   },
 };
 
+export const fake: Sentence = {
+  english: [""],
+  citation: "",
+  furigana: "abcd".split(""),
+  synonyms: { bc: "xyz".split(""), d: ["e"], c: ["CcC"], a: ["AAA"] },
+};
+
 export function sentenceToDot(sentence: Sentence, outfile = "demo.dot") {
   const res = sentenceToGraph(sentence);
   writeFileSync(outfile, treeToDot(res.keyToPrev, res.textToKeys));
@@ -88,13 +95,5 @@ $ ${cmd}`);
 if (module === require.main) {
   sentenceToDot(demo, "demo.dot");
 
-  sentenceToDot(
-    {
-      english: [""],
-      citation: "",
-      furigana: "abcd".split(""),
-      synonyms: { bc: "xyz".split(""), d: ["e"], c: ["CcC"], a: ["AAA"] },
-    },
-    "fake.dot"
-  );
+  sentenceToDot(fake, "fake.dot");
 }

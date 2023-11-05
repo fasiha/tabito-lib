@@ -2,7 +2,7 @@ import test from "tape";
 import type { Chunk, Sentence } from "../interfaces";
 import { sentenceToGraph } from "..";
 import { chunkInput, findGreedyPath } from "../graphSearch";
-import { demo } from "../demo";
+import { demo, fake } from "../demo";
 
 test("greedy search", (t) => {
   const fake: Sentence = {
@@ -42,6 +42,21 @@ test("hiragana normalization: return is same form as input even during backgroun
   const graph = sentenceToGraph(sentence);
   const input = "らーめんがタべたい";
   t.deepEqual(findGreedyPath(input, graph), [input]);
+  t.end();
+});
+
+test("deeply forking path-finding", (t) => {
+  const graph = sentenceToGraph(fake);
+
+  const helper = (s: string) => t.deepEqual(findGreedyPath(s, graph), [s]);
+
+  helper("abcd");
+  helper("axyzd");
+  helper("axyze");
+  helper("abCcCe");
+  helper("AAAbCcCe");
+  helper("AAAxyze"); // fully synonyms, no mainline
+
   t.end();
 });
 
