@@ -1,16 +1,44 @@
 {
   "name": "tabito-lib",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "esbuild *.ts --outdir=. --platform=node --format=cjs",
-    "demo": "npm run build && node demo.js",
-    "test": "npm run build && esbuild tests/*.ts --outdir=tests --platform=node --format=cjs && tape 'tests/**/*js'"
+  "description": "Express a Japanese sentence with furigana and with synonyms, then match it against text input",
+  "keywords": [
+    "Japanese",
+    "sentence",
+    "furigana",
+    "quiz"
+  ],
+  "author": "Ahmed Fasih",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fasiha/tabito-lib.git"
   },
-  "keywords": [],
-  "author": "",
+  "homepage": "https://github.com/fasiha/tabito-lib",
+  "bugs": "https://github.com/fasiha/tabito-lib/issues",
   "license": "Unlicense",
+  "scripts": {
+    "build": "esbuild index.ts --outfile=dist/index.min.mjs --bundle --sourcemap --minify --format=esm",
+    "build:cjs": "esbuild index.ts --outfile=dist/index.cjs --bundle --format=cjs",
+    "build:browser": "esbuild index.ts --outfile=dist/index.min.js --bundle --sourcemap --minify --format=iife --global-name=tabito",
+    "bundle": "npm run build && npm run build:browser && npm run build:cjs",
+    "build:dev": "esbuild *.ts --outdir=. --platform=node --format=cjs",
+    "demo": "npm run build:dev && node demo.js",
+    "test": "npm run build:dev && esbuild tests/*.ts --outdir=tests --platform=node --format=cjs && tape 'tests/**/*js'"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.min.cjs",
+  "exports": {
+    ".": {
+      "browser": "./dist/index.min.mjs",
+      "node": {
+        "import": "./dist/index.min.mjs",
+        "require": "./dist/index.cjs"
+      },
+      "import": "./dist/index.min.mjs"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
   "devDependencies": {
     "@types/node": "^20.8.10",
     "@types/tape": "^5.6.3",

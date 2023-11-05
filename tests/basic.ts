@@ -3,11 +3,8 @@ import { Sentence } from "../interfaces";
 import { sentenceToGraph } from "..";
 import { reverse } from "../utils";
 
-const superfluous = { english: [], citation: "" };
-
 test("mainline, no synonyms, no repeats", (t) => {
   const sentence: Sentence = {
-    ...superfluous,
     furigana: ["a", "b", "c"],
   };
 
@@ -34,7 +31,6 @@ test("mainline, no synonyms, no repeats", (t) => {
 
 test("mainline with repeats", (t) => {
   const sentence: Sentence = {
-    ...superfluous,
     furigana: ["a", "b", "c", "a"],
   };
 
@@ -56,7 +52,6 @@ test("mainline with repeats", (t) => {
 
 test("basic synomym", (t) => {
   const sentence: Sentence = {
-    ...superfluous,
     furigana: ["a", "b", "c", "d"],
     synonyms: { bc: ["x", "y", "z"] },
   };
@@ -85,7 +80,6 @@ test("basic synomym", (t) => {
 
 test("synomym not aligned with morpheme boundary", (t) => {
   const badSentence: Sentence = {
-    ...superfluous,
     furigana: ["a", "Bb", "c", "d"],
     synonyms: { bc: ["x", "y", "z"] },
   };
@@ -96,7 +90,6 @@ test("synomym not aligned with morpheme boundary", (t) => {
 
 test("partial synomyms ignored", (t) => {
   const okSentence: Sentence = {
-    ...superfluous,
     furigana: ["a", "b", "bc", "cbd"],
     synonyms: { b: ["x", "y", "z"] },
   };
@@ -107,7 +100,6 @@ test("partial synomyms ignored", (t) => {
 
 test("multiply-occurring synonym ok", (t) => {
   const sentence: Sentence = {
-    ...superfluous,
     furigana: ["a", "b", "c", "b"],
     synonyms: { b: ["x", "y", "z"] },
   };
@@ -134,7 +126,6 @@ test("multiply-occurring synonym ok", (t) => {
 
 test("multiple synonyms should link to each other", (t) => {
   const sentence: Sentence = {
-    ...superfluous,
     furigana: "abcd".split(""),
     synonyms: { bc: "xyz".split(""), c: ["1"], d: ["e"] },
   };

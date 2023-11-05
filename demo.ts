@@ -74,8 +74,6 @@ export const demo: Sentence = {
 };
 
 export const fake: Sentence = {
-  english: [""],
-  citation: "",
   furigana: "abcd".split(""),
   synonyms: { bc: "xyz".split(""), d: ["e"], c: ["CcC"], a: ["AAA"] },
 };

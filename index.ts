@@ -4,7 +4,7 @@ import { findOccurrences, insert, reverse, reverseUniq } from "./utils";
 /**
  * Ensures all synonyms are present and along furigana boundaries
  */
-export function validateSynonyms(sentence: Sentence): boolean {
+function validateSynonyms(sentence: Sentence): boolean {
   const rawRubies = sentence.furigana.map((f) =>
     typeof f === "string" ? f : f.ruby
   );
@@ -203,3 +203,5 @@ export function sentenceToGraph(sentence: Sentence): Graph {
     leafKeys,
   };
 }
+
+export { chunkInput } from "./graphSearch";
