@@ -205,3 +205,4 @@ export function sentenceToGraph(sentence: Sentence): Graph {
 }
 
 export { chunkInput, findGreedyPath as _findGreedyPath } from "./graphSearch";
+export type * from "./interfaces";
