@@ -9,10 +9,11 @@ Specifically, suppose you want to show them the English translation, something l
 - Of course you want to allow the informal conjugation of <ruby>撮<rt>と</rt></ruby>りました, so: <ruby>撮<rt>と</rt></ruby>った
 - Oh, sometimes IME will convert たくさん to kanji: <ruby>沢<rt>たく</rt></ruby><ruby>山<rt>さん</rt></ruby>
 - And in fact you want to allow any combination of kanji and kana.
+- By the way, you'll want to treat hiragana and katakana as equivalent (again, IME).
 
 In summary, your simple sentence is actually this directed acyclic graph (DAG):
 
-![Graph (with nodes and edges) of the words of a Japanese sentence with forks for kanji-vs-kana and synonymous alternatives](./graph.png)
+![Graph (with nodes and edges) of the words of a Japanese sentence with forks for kanji-vs-kana and synonymous alternatives](./graph.svg)
 
 Tabito (<ruby>旅<rt>ta</rt></ruby><ruby>人<rt>bito</rt></ruby>, "travel person") is a dependency-free public-domain JavaScript/TypeScript library that helps with this. It exports two functions, `sentenceToGraph` and `chunkInput`, which constructs the graph above from a simpler editor-friendly representation and then break up user input into walks along the graph.
 

@@ -6,7 +6,7 @@ npm run demo
 This will save some output files.
 */
 
-import { sentenceToGraph } from ".";
+import { sentenceToGraph } from "./index";
 import type { Sentence, Tree } from "./interfaces";
 import { reverse } from "./utils";
 import { writeFileSync } from "fs";
@@ -90,12 +90,15 @@ export const fake: Sentence = {
 export function sentenceToDot(sentence: Sentence, outfile = "demo.dot") {
   const res = sentenceToGraph(sentence);
   writeFileSync(outfile, treeToDot(res.keyToPrev, res.textToKeys));
-  const cmd = `dot -Tpng ${outfile} -o${outfile}.png`;
+  const cmds = [
+    `dot -Tsvg ${outfile} -o${outfile}.svg`,
+    `dot -Tpng ${outfile} -o${outfile}.png`,
+  ];
   try {
-    execSync(cmd);
+    for (const cmd of cmds) execSync(cmd);
   } catch {
     console.error(`Unable to generate PNG graph. Maybe 'dot' isn't installed? I tried to run
-$ ${cmd}`);
+$ ${cmds.join("; ")}`);
   }
 }
 

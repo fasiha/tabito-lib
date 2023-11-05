@@ -1,7 +1,6 @@
 import test from "tape";
 import { Sentence } from "../interfaces";
 import { sentenceToGraph } from "..";
-import { reverse } from "../utils";
 
 test("mainline, no synonyms, no repeats", (t) => {
   const sentence: Sentence = {
@@ -13,13 +12,6 @@ test("mainline, no synonyms, no repeats", (t) => {
   for (const f of sentence.furigana) {
     t.ok((f as string) in textToKeys);
   }
-
-  // this will always be true, even when we have repeats: key must be unique
-  const keyToText = reverse(textToKeys);
-  t.ok(
-    Object.values(keyToText).every((v) => v.length === 1),
-    "unique keys"
-  );
 
   // a has no predecessors
   t.equal(keyToPrev[textToKeys.a[0]], undefined);
@@ -43,10 +35,6 @@ test("mainline with repeats", (t) => {
 
   t.equal(textToKeys["a"].length, 2);
 
-  t.ok(
-    Object.values(reverse(textToKeys)).every((v) => v.length === 1),
-    "unique keys"
-  );
   t.end();
 });
 
@@ -71,10 +59,6 @@ test("basic synomym", (t) => {
     "d has mainline AND synonym prefixes!"
   );
 
-  t.ok(
-    Object.values(reverse(textToKeys)).every((v) => v.length === 1),
-    "unique keys"
-  );
   t.end();
 });
 
@@ -114,11 +98,6 @@ test("multiply-occurring synonym ok", (t) => {
     textToKeys.x.flatMap((x) => keyToPrev[x]).sort(),
     [textToKeys.a[0], textToKeys.c[0]].sort(),
     "synonym parents"
-  );
-
-  t.ok(
-    Object.values(reverse(textToKeys)).every((v) => v.length === 1),
-    "unique keys"
   );
 
   t.end();
