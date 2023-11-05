@@ -1,5 +1,6 @@
 node_modules/
 *.dot
 *.js
+*.mjs
 *.png
 .DS_Store

@@ -3,7 +3,7 @@
 Suppose you are making an app to help Japanese language learners, and you want users to learn a sentence like,
 > <ruby>京<rt>きょう</rt></ruby><ruby>都<rt>と</rt></ruby>でたくさん<ruby>写<rt>しゃ</rt></ruby><ruby>真<rt>しん</rt></ruby>を<ruby>撮<rt>と</rt></ruby>りました
 
-Specifically, suppose you want to show them the English translation, something like *"In Kyoto, (I) took a lot of photos"*, and you want them to type in the above sentence, or something like it. 
+Specifically, suppose you want to show them the English translation, something like *"In Kyoto, (I) took a lot of photos"*, and you want them to type in the above sentence, or something like it.
 
 - "たくさん" ("lots") can function as an adverb so you want to allow: <ruby>京<rt>きょう</rt></ruby><ruby>都<rt>と</rt></ruby>で<ruby>写<rt>しゃ</rt></ruby><ruby>真<rt>しん</rt></ruby>をたくさん<ruby>撮<rt>と</rt></ruby>りました
 - Of course you want to allow the informal conjugation of <ruby>撮<rt>と</rt></ruby>りました, so: <ruby>撮<rt>と</rt></ruby>った
@@ -135,5 +135,6 @@ To develop this repo, make sure you have [Git](https://git-scm.com) and [Node.js
 1. check out this repo: `git clone https://github.com/fasiha/tabito-lib`
 2. enter the directory: `cd tabito-lib`
 3. install a few dev dependencies: `npx pnpm install` (npx comes with Node.js)
+   1. Of course plain `npm` will also work: `npm install`
 4. run tests: `npm t` (npm comes with Node.js too, this runs the `script` named `"test"` in [`package.json`](./package.json))
 5. run the demo: `npm run demo` (if you have Graphviz installed, (via Homebrew, Conda, etc.), i.e., if you have the `dot` command available, this will make a couple of pretty images)
