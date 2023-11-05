@@ -79,3 +79,28 @@ export function longest(v: string[]): string {
   if (v.length === 0) throw new Error("empty");
   return v.reduce((prev, curr) => (curr.length > prev.length ? curr : prev));
 }
+
+export function groupBy<X, Y extends number | string>(
+  xs: X[],
+  f: (x: X) => Y
+): Map<Y, X[]> {
+  const ret = new Map<Y, X[]>();
+  for (const x of xs) {
+    const y = f(x);
+    const hit = ret.get(y);
+    if (!hit) {
+      ret.set(y, [x]);
+    } else {
+      hit.push(x);
+    }
+  }
+  return ret;
+}
+
+export function countElements<X>(xs: X[]): Map<X, number> {
+  const ret = new Map<X, number>();
+  for (const x of xs) {
+    ret.set(x, (ret.get(x) ?? 0) + 1);
+  }
+  return ret;
+}

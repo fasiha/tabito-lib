@@ -1,5 +1,4 @@
 import type { Furigana, Graph, Sentence, Tree } from "./interfaces";
-import { max } from "./utils";
 import { findOccurrences, insert, reverse, reverseUniq } from "./utils";
 
 /**
@@ -184,10 +183,14 @@ export function sentenceToGraph(sentence: Sentence): Graph {
 
   // Now add synonyms
   parseSynonyms(sentence, textToKeys, keyToPrev);
+
+  // Wrap up
+  const keyToNext = reverse(keyToPrev);
+  const keyToText = reverseUniq(textToKeys);
   return {
     textToKeys,
     keyToPrev,
-    keyToText: reverseUniq(textToKeys),
-    keyToNext: reverse(keyToPrev),
+    keyToText,
+    keyToNext,
   };
 }

@@ -3,14 +3,14 @@ Run this as:
 ```console
 npm run demo
 ```
-and follow instructions
+This will save some output files.
 */
 
 import { sentenceToGraph } from ".";
-import { chunkInput } from "./graphSearch";
 import type { Sentence, Tree } from "./interfaces";
 import { reverse } from "./utils";
-import { writeFile } from "fs/promises";
+import { writeFileSync } from "fs";
+import { execSync } from "child_process";
 
 function treeToDot(keyToPrev: Tree, textToKeys: Tree) {
   const keyToText = reverse(textToKeys);
@@ -75,38 +75,26 @@ export const demo: Sentence = {
 
 export function sentenceToDot(sentence: Sentence, outfile = "demo.dot") {
   const res = sentenceToGraph(sentence);
-  writeFile(outfile, treeToDot(res.keyToPrev, res.textToKeys));
-  console.log(`Output ${outfile}
-Now run
-$ dot -Tpng ${outfile} > ${outfile}.png`);
+  writeFileSync(outfile, treeToDot(res.keyToPrev, res.textToKeys));
+  const cmd = `dot -Tpng ${outfile} -o${outfile}.png`;
+  try {
+    execSync(cmd);
+  } catch {
+    console.error(`Unable to generate PNG graph. Maybe 'dot' isn't installed? I tried to run
+$ ${cmd}`);
+  }
 }
 
 if (module === require.main) {
-  // sentenceToDot(demo, "demo.dot");
-  const graph = sentenceToGraph(demo);
-  // console.log(chunkInput("しゃしん田たくさんとった", graph));
-  console.log(chunkInput("たくさんとった", graph));
+  sentenceToDot(demo, "demo.dot");
 
-  function aFollowsB(a: string, b: string): boolean {
-    return graph.textToKeys[a]
-      .flatMap((o) => graph.keyToNext[o])
-      .map((key) => graph.keyToText[key])
-      .includes(b);
-  }
-
-  console.log(
-    aFollowsB("たくさん", "と"),
-    aFollowsB("と", "っ"),
-    aFollowsB("っ", "た")
+  sentenceToDot(
+    {
+      english: [""],
+      citation: "",
+      furigana: "abcd".split(""),
+      synonyms: { bc: "xyz".split(""), d: ["e"], c: ["CcC"], a: ["AAA"] },
+    },
+    "fake.dot"
   );
-
-  // sentenceToDot(
-  //   {
-  //     english: [""],
-  //     citation: "",
-  //     furigana: "abcd".split(""),
-  //     synonyms: { bc: "xyz".split(""), d: ["e"], c: ["CcC"], a: ["AAA"] },
-  //   },
-  //   "fake.dot"
-  // );
 }

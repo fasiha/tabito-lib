@@ -1,6 +1,6 @@
 import { Chunk, type Graph } from "./interfaces";
 import { kata2hira } from "./kana";
-import { longest, max } from "./utils";
+import { longest } from "./utils";
 
 function findMatchingWords(inputHiragana: string, { textToKeys }: Graph) {
   if (!inputHiragana) return undefined;
@@ -41,8 +41,9 @@ function followGreedy(input: string, startKey: string, graph: Graph): string {
   // base case (2) end of graph
   if (nextKeys.length === 0) return headAsInput;
 
-  const bestKey = max(nextKeys, (key) => keyToText[key].length);
-  return headAsInput + followGreedy(input.slice(head.length), bestKey, graph);
+  const rest = input.slice(head.length);
+  const downstream = nextKeys.map((key) => followGreedy(rest, key, graph));
+  return headAsInput + longest(downstream);
 }
 
 export function chunkInput(input: string, graph: Graph): Chunk[] {

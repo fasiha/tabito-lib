@@ -63,7 +63,7 @@ test("chunking", (t) => {
   allStatusOk(chunks);
   arrEqual(
     chunks.map((o) => o.text),
-    ["しゃしん", "たくさん", "とった"]
+    ["しゃしん", "たくさんとった"]
   );
 
   t.end();
