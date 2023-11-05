@@ -14,9 +14,12 @@ export interface Graph {
   textToKeys: Tree;
   keyToPrev: Tree;
   keyToText: Record<string, string>;
+  ancestorKeys: Set<string>;
+  leafKeys: Set<string>;
 }
 
 export interface Chunk {
   text: string;
   status: "unknown" | "ok";
+  start: boolean;
 }

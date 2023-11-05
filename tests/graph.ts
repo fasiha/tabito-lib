@@ -14,21 +14,23 @@ test("greedy search", (t) => {
   const graph = sentenceToGraph(fake);
   const arrEqual = (a: string[], b: string[]) =>
     t.deepEqual(a.sort(), b.sort());
-  arrEqual(findGreedyPath("a", graph), ["a"]);
-  arrEqual(findGreedyPath("abc", graph), ["abc"]);
-  arrEqual(findGreedyPath("abec", graph), ["ab"]);
-  arrEqual(findGreedyPath("aebc", graph), ["a"]);
-  arrEqual(findGreedyPath("abcd", graph), ["abcd"]);
-  arrEqual(findGreedyPath("abcdefg", graph), ["abcd"]);
-  arrEqual(findGreedyPath("x", graph), ["x"]);
-  arrEqual(findGreedyPath("xy", graph), ["xy"]);
-  arrEqual(findGreedyPath("ybq", graph), ["yb"]);
-  arrEqual(findGreedyPath("ybd", graph), ["ybd"]);
-  arrEqual(findGreedyPath("dqq", graph), ["d"]);
-  arrEqual(findGreedyPath("bcd", graph), ["b", "bcd"]);
-  arrEqual(findGreedyPath("bdq", graph), ["b", "bd"]);
 
-  arrEqual(findGreedyPath("q", graph), []);
+  const find = (s: string) => findGreedyPath(s, graph).map((s) => s.result);
+  arrEqual(find("a"), ["a"]);
+  arrEqual(find("abc"), ["abc"]);
+  arrEqual(find("abec"), ["ab"]);
+  arrEqual(find("aebc"), ["a"]);
+  arrEqual(find("abcd"), ["abcd"]);
+  arrEqual(find("abcdefg"), ["abcd"]);
+  arrEqual(find("x"), ["x"]);
+  arrEqual(find("xy"), ["xy"]);
+  arrEqual(find("ybq"), ["yb"]);
+  arrEqual(find("ybd"), ["ybd"]);
+  arrEqual(find("dqq"), ["d"]);
+  arrEqual(find("bcd"), ["b", "bcd"]);
+  arrEqual(find("bdq"), ["b", "bd"]);
+
+  arrEqual(find("q"), []);
 
   t.end();
 });
@@ -41,14 +43,22 @@ test("hiragana normalization: return is same form as input even during backgroun
   };
   const graph = sentenceToGraph(sentence);
   const input = "らーめんがタべたい";
-  t.deepEqual(findGreedyPath(input, graph), [input]);
+  const result = findGreedyPath(input, graph);
+  t.deepEqual(
+    result.map((o) => o.result),
+    [input]
+  );
   t.end();
 });
 
 test("deeply forking path-finding", (t) => {
   const graph = sentenceToGraph(fake);
 
-  const helper = (s: string) => t.deepEqual(findGreedyPath(s, graph), [s]);
+  const helper = (s: string) =>
+    t.deepEqual(
+      findGreedyPath(s, graph).map((o) => o.result),
+      [s]
+    );
 
   helper("abcd");
   helper("axyzd");
@@ -73,6 +83,7 @@ test("chunking", (t) => {
     chunks.map((o) => o.text),
     ["しゃしん", "たくさん"]
   );
+  t.ok(chunks.every((o) => o.start === false));
 
   chunks = chunkInput("しゃしんたくさんとった", graph);
   allStatusOk(chunks);
@@ -80,6 +91,16 @@ test("chunking", (t) => {
     chunks.map((o) => o.text),
     ["しゃしん", "たくさんとった"]
   );
+  t.ok(chunks.every((o) => o.start === false));
+
+  chunks = chunkInput("京都で撮った", graph);
+  allStatusOk(chunks);
+  arrEqual(
+    chunks.map((o) => o.text),
+    ["京都で", "撮った"]
+  );
+  t.ok(chunks[0].start);
+  t.false(chunks[1].start);
 
   t.end();
 });

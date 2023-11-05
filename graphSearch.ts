@@ -1,6 +1,6 @@
 import { Chunk, type Graph } from "./interfaces";
 import { kata2hira } from "./kana";
-import { longest } from "./utils";
+import { longest, max } from "./utils";
 
 function findMatchingWords(inputHiragana: string, { textToKeys }: Graph) {
   if (!inputHiragana) return undefined;
@@ -13,11 +13,17 @@ function findMatchingWords(inputHiragana: string, { textToKeys }: Graph) {
   return matchingWords;
 }
 
-export function findGreedyPath(input: string, graph: Graph) {
+export function findGreedyPath(
+  input: string,
+  graph: Graph
+): { result: string; firstKey: string }[] {
   const inputHiragana = kata2hira(input);
   const heads = findMatchingWords(inputHiragana, graph) ?? [];
   const keys = heads.flatMap((word) => graph.textToKeys[word]) ?? [];
-  return keys.map((key) => followGreedy(input, key, graph));
+  return keys.map((key) => ({
+    firstKey: key,
+    result: followGreedy(input, key, graph),
+  }));
 }
 
 function followGreedy(input: string, startKey: string, graph: Graph): string {
@@ -52,12 +58,16 @@ export function chunkInput(input: string, graph: Graph): Chunk[] {
   while (rest) {
     const hits = findGreedyPath(rest, graph);
     if (hits.length === 0) {
-      chunks.push({ text: rest[0], status: "unknown" });
+      chunks.push({ text: rest[0], status: "unknown", start: false });
       rest = rest.slice(1);
     } else {
-      const hit = longest(hits);
-      chunks.push({ text: hit, status: "ok" });
-      rest = rest.slice(hit.length);
+      const hit = max(hits, (h) => h.result.length);
+      chunks.push({
+        text: hit.result,
+        status: "ok",
+        start: graph.ancestorKeys.has(hit.firstKey),
+      });
+      rest = rest.slice(hit.result.length);
     }
   }
   return chunks;
