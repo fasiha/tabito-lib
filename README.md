@@ -76,7 +76,9 @@ Finally, this function takes
 1. a string (raw input from a user) and
 2. a graph object (output by `sentenceToGraph`)
 
-and outputs its best guess at what nodes of the graph the text represents. The returned array has elements shaped like this:
+and outputs its best guess at what nodes of the graph the text represents. It performs hiragana/katakana normalization, considers all synonyms, and looks at both kanji and furigana (the `rt` field) to find the longest walks through the graph present in the input.
+
+The returned array has elements shaped like this:
 ```ts
 export interface Chunk {
   text: string;
