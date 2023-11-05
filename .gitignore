@@ -1,6 +1,9 @@
 node_modules/
+./*.js
+./*.mjs
+
 *.dot
-*.js
-*.mjs
 *.png
+*.svg
+
 .DS_Store
