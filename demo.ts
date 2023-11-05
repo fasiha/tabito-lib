@@ -56,26 +56,37 @@ export const demo: Sentence = {
   ].flat(),
   english: ["In Kyoto, I took a lot of photos"],
   citation: "Genki 2, 15-IV",
-  synonyms: {
-    たくさん: [
-      { ruby: "沢", rt: "たく" },
-      { ruby: "山", rt: "さん" },
-    ],
-    撮りました: [[{ ruby: "撮", rt: "と" }, "っ"], ["た"]].flat(),
-    たくさん写真を: [
+  synonyms: [
+    [
+      "たくさん",
       [
-        { ruby: "写", rt: "しゃ" },
-        { ruby: "真", rt: "しん" },
+        { ruby: "沢", rt: "たく" },
+        { ruby: "山", rt: "さん" },
       ],
-      ["を"],
-      ["たくさん"],
-    ].flat(),
-  },
+    ],
+    ["撮りました", [[{ ruby: "撮", rt: "と" }, "っ"], ["た"]].flat()],
+    [
+      "たくさん写真を",
+      [
+        [
+          { ruby: "写", rt: "しゃ" },
+          { ruby: "真", rt: "しん" },
+        ],
+        ["を"],
+        ["たくさん"],
+      ].flat(),
+    ],
+  ],
 };
 
 export const fake: Sentence = {
   furigana: "abcd".split(""),
-  synonyms: { bc: "xyz".split(""), d: ["e"], c: ["CcC"], a: ["AAA"] },
+  synonyms: [
+    ["bc", "xyz".split("")],
+    ["d", ["e"]],
+    ["c", ["CcC"]],
+    ["a", ["AAA"]],
+  ],
 };
 
 export function sentenceToDot(sentence: Sentence, outfile = "demo.dot") {

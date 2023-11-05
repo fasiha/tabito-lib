@@ -7,7 +7,7 @@ import { demo, fake } from "../demo";
 test("greedy search", (t) => {
   const fake: Sentence = {
     furigana: ["a", "b", "c", "d"],
-    synonyms: { bc: ["x", "y", "b"] },
+    synonyms: [["bc", ["x", "y", "b"]]],
   };
   const graph = sentenceToGraph(fake);
   const arrEqual = (a: string[], b: string[]) =>
@@ -97,6 +97,24 @@ test("chunking", (t) => {
   );
   t.ok(chunks[0].start);
   t.false(chunks[1].start);
+
+  t.end();
+});
+
+test("chunking with duplicate synonyms", (t) => {
+  const sentence: Sentence = {
+    furigana: "abc".split(""),
+    synonyms: [
+      ["b", ["x"]],
+      ["b", ["y"]],
+      ["b", ["z"]],
+    ],
+  };
+  const graph = sentenceToGraph(sentence);
+  const chunks = chunkInput("azc", graph);
+  t.equal(chunks.length, 1);
+  t.equal(chunks[0].text, "azc");
+  t.equal(chunks[0].status, "ok");
 
   t.end();
 });

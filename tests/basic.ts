@@ -53,7 +53,7 @@ test("mainline with repeats", (t) => {
 test("basic synomym", (t) => {
   const sentence: Sentence = {
     furigana: ["a", "b", "c", "d"],
-    synonyms: { bc: ["x", "y", "z"] },
+    synonyms: [["bc", ["x", "y", "z"]]],
   };
 
   const { textToKeys, keyToPrev } = sentenceToGraph(sentence);
@@ -81,7 +81,7 @@ test("basic synomym", (t) => {
 test("synomym not aligned with morpheme boundary", (t) => {
   const badSentence: Sentence = {
     furigana: ["a", "Bb", "c", "d"],
-    synonyms: { bc: ["x", "y", "z"] },
+    synonyms: [["bc", ["x", "y", "z"]]],
   };
 
   t.throws(() => sentenceToGraph(badSentence));
@@ -91,7 +91,7 @@ test("synomym not aligned with morpheme boundary", (t) => {
 test("partial synomyms ignored", (t) => {
   const okSentence: Sentence = {
     furigana: ["a", "b", "bc", "cbd"],
-    synonyms: { b: ["x", "y", "z"] },
+    synonyms: [["b", ["x", "y", "z"]]],
   };
 
   t.ok(sentenceToGraph(okSentence), "synonym repeating only partially ok");
@@ -101,7 +101,7 @@ test("partial synomyms ignored", (t) => {
 test("multiply-occurring synonym ok", (t) => {
   const sentence: Sentence = {
     furigana: ["a", "b", "c", "b"],
-    synonyms: { b: ["x", "y", "z"] },
+    synonyms: [["b", ["x", "y", "z"]]],
   };
 
   const { textToKeys, keyToPrev } = sentenceToGraph(sentence);
@@ -127,7 +127,11 @@ test("multiply-occurring synonym ok", (t) => {
 test("multiple synonyms should link to each other", (t) => {
   const sentence: Sentence = {
     furigana: "abcd".split(""),
-    synonyms: { bc: "xyz".split(""), c: ["1"], d: ["e"] },
+    synonyms: [
+      ["bc", "xyz".split("")],
+      ["c", ["1"]],
+      ["d", ["e"]],
+    ],
   };
   const { textToKeys, keyToPrev, keyToText } = sentenceToGraph(sentence);
 
@@ -135,6 +139,24 @@ test("multiple synonyms should link to each other", (t) => {
     .flatMap((e) => keyToPrev[e].map((key) => keyToText[key]))
     .sort();
   t.deepEqual(eParents, ["1", "c", "z"].sort());
+
+  t.end();
+});
+
+test("synonyms can be repeated", (t) => {
+  const sentence: Sentence = {
+    furigana: "abc".split(""),
+    synonyms: [
+      ["b", ["x"]],
+      ["b", ["y"]],
+      ["b", ["z"]],
+    ],
+  };
+  const { textToKeys, keyToPrev, keyToText } = sentenceToGraph(sentence);
+  const cParents = textToKeys.c
+    .flatMap((cKey) => keyToPrev[cKey])
+    .map((key) => keyToText[key]);
+  t.deepEqual(cParents.sort(), ["b", "x", "y", "z"].sort());
 
   t.end();
 });

@@ -14,7 +14,7 @@ function validateSynonyms(sentence: Sentence): boolean {
     Array.from({ length: str.length }, () => idx)
   );
 
-  for (const synonym in sentence.synonyms) {
+  for (const [synonym] of sentence.synonyms ?? []) {
     const start = rawRuby.indexOf(synonym);
     if (start < 0) return false;
     const end = start + synonym.length - 1;
@@ -51,7 +51,7 @@ function parseSynonyms(
   const entryNumber = rawRubies.flatMap((str, idx) =>
     Array.from({ length: str.length }, () => idx)
   );
-  for (const [source, dest] of Object.entries(sentence.synonyms ?? {})) {
+  for (const [source, dest] of sentence.synonyms ?? []) {
     const starts = findOccurrences(rawRuby, source);
     if (starts.length === 0) {
       // this should never happen since `validateSynonyms` runs earlier
@@ -164,7 +164,7 @@ function insertFurigana({
 
 export function sentenceToGraph(sentence: Sentence): Graph {
   if (!validateSynonyms(sentence)) {
-    throw new Error("wat");
+    throw new Error("Invalid synonyms");
   }
   const textToKeys: Tree = {};
   const keyToPrev: Tree = {};

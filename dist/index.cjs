@@ -168,7 +168,7 @@ function validateSynonyms(sentence) {
   const charToMorphemeIdx = rawRubies.flatMap(
     (str, idx) => Array.from({ length: str.length }, () => idx)
   );
-  for (const synonym in sentence.synonyms) {
+  for (const [synonym] of sentence.synonyms ?? []) {
     const start = rawRuby.indexOf(synonym);
     if (start < 0)
       return false;
@@ -189,7 +189,7 @@ function parseSynonyms(sentence, textToKeys, keyToPrev) {
   const entryNumber = rawRubies.flatMap(
     (str, idx) => Array.from({ length: str.length }, () => idx)
   );
-  for (const [source, dest] of Object.entries(sentence.synonyms ?? {})) {
+  for (const [source, dest] of sentence.synonyms ?? []) {
     const starts = findOccurrences(rawRuby, source);
     if (starts.length === 0) {
       throw new Error("synonym not found in raw sentence? " + source);
@@ -279,7 +279,7 @@ function insertFurigana({
 }
 function sentenceToGraph(sentence) {
   if (!validateSynonyms(sentence)) {
-    throw new Error("wat");
+    throw new Error("Invalid synonyms");
   }
   const textToKeys = {};
   const keyToPrev = {};
