@@ -3,7 +3,8 @@ export type Furigana = string | { ruby: string; rt: string };
 export interface Sentence {
   furigana: Furigana[];
 
-  // tuple's first element must be in `furigana` (string or `ruby`). Entries of the 2nd (array) may be empty string
+  // tuple's first element must be in `furigana` (string or `ruby`) along element boundaries.
+  // Entries of the 2nd (array) may be empty string
   synonyms?: [string, Furigana[]][];
 
   english?: string[];

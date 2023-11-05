@@ -20,6 +20,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // index.ts
 var tabito_lib_exports = {};
 __export(tabito_lib_exports, {
+  _findGreedyPath: () => findGreedyPath,
   chunkInput: () => chunkInput,
   sentenceToGraph: () => sentenceToGraph
 });

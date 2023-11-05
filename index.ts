@@ -204,4 +204,4 @@ export function sentenceToGraph(sentence: Sentence): Graph {
   };
 }
 
-export { chunkInput } from "./graphSearch";
+export { chunkInput, findGreedyPath as _findGreedyPath } from "./graphSearch";

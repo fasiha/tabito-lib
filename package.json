@@ -19,14 +19,14 @@
   "scripts": {
     "build": "esbuild index.ts --outfile=dist/index.min.mjs --bundle --sourcemap --minify --format=esm",
     "build:cjs": "esbuild index.ts --outfile=dist/index.cjs --bundle --format=cjs",
-    "build:browser": "esbuild index.ts --outfile=dist/index.min.js --bundle --sourcemap --minify --format=iife --global-name=tabito",
+    "build:browser": "esbuild index.ts --outfile=dist/tabito.min.js --bundle --sourcemap --minify --format=iife --global-name=tabito",
     "bundle": "npm run build && npm run build:browser && npm run build:cjs",
-    "build:demo": "esbuild demo.ts --outdir=. --platform=node --format=cjs",
-    "demo": "npm run build:cjs && npm run build:demo && node demo.js",
-    "test": "npm run build:cjs && npm run build:demo && esbuild tests/*.ts --outdir=tests --platform=node --format=cjs && tape 'tests/**/*js'"
+    "build:dev": "esbuild demo.ts utils.ts --outdir=. --platform=node --format=cjs",
+    "demo": "npm run build:cjs && npm run build:dev && node demo.js",
+    "test": "npm run build:cjs && npm run build:dev && esbuild tests/*.ts --outdir=tests --platform=node --format=cjs && tape 'tests/**/*js'"
   },
   "main": "dist/index.cjs",
-  "module": "dist/index.min.cjs",
+  "module": "dist/index.cjs",
   "exports": {
     ".": {
       "browser": "./dist/index.min.mjs",

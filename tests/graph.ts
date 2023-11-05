@@ -1,7 +1,7 @@
 import test from "tape";
 import type { Chunk, Sentence } from "../interfaces";
 import { sentenceToGraph } from "..";
-import { chunkInput, findGreedyPath } from "../graphSearch";
+import { chunkInput, _findGreedyPath } from "..";
 import { demo, fake } from "../demo";
 
 test("greedy search", (t) => {
@@ -13,7 +13,7 @@ test("greedy search", (t) => {
   const arrEqual = (a: string[], b: string[]) =>
     t.deepEqual(a.sort(), b.sort());
 
-  const find = (s: string) => findGreedyPath(s, graph).map((s) => s.result);
+  const find = (s: string) => _findGreedyPath(s, graph).map((s) => s.result);
   arrEqual(find("a"), ["a"]);
   arrEqual(find("abc"), ["abc"]);
   arrEqual(find("abec"), ["ab"]);
@@ -39,7 +39,7 @@ test("hiragana normalization: return is same form as input even during backgroun
   };
   const graph = sentenceToGraph(sentence);
   const input = "らーめんがタべたい";
-  const result = findGreedyPath(input, graph);
+  const result = _findGreedyPath(input, graph);
   t.deepEqual(
     result.map((o) => o.result),
     [input]
@@ -52,7 +52,7 @@ test("deeply forking path-finding", (t) => {
 
   const helper = (s: string) =>
     t.deepEqual(
-      findGreedyPath(s, graph).map((o) => o.result),
+      _findGreedyPath(s, graph).map((o) => o.result),
       [s]
     );
 
