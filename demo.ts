@@ -106,4 +106,30 @@ if (module === require.main) {
   sentenceToDot(demo, "demo.dot");
 
   sentenceToDot(fake, "fake.dot");
+
+  const ex: Sentence = {
+    furigana: [
+      ["これ"],
+      ["は"],
+      [{ ruby: "兄", rt: "あに" }],
+      ["が"],
+      [
+        { ruby: "予", rt: "よ" },
+        { ruby: "約", rt: "やく" },
+      ],
+      ["し"],
+      ["た"],
+      [
+        { ruby: "旅", rt: "りょ" },
+        { ruby: "館", rt: "かん" },
+      ],
+      ["です"],
+    ].flat(),
+    english: [
+      "This is the Japanese inn that my older brother made a reservation at",
+    ],
+    citation:
+      "My answer to Genki II Workbook, Lesson 15, Topic 4, section II, question 1",
+  };
+  console.log(sentenceToGraph(ex));
 }

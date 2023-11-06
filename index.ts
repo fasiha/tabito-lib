@@ -188,11 +188,15 @@ export function sentenceToGraph(sentence: Sentence): Graph {
   const keyToNext = reverse(keyToPrev);
   const keyToText = reverseUniq(textToKeys);
   const allKeys = Object.keys(keyToText);
-  const ancestorKeys = new Set(
-    allKeys.filter((key) => !(key in keyToPrev) || keyToPrev[key].length === 0)
+  const ancestorKeys = Object.fromEntries(
+    allKeys
+      .filter((key) => !(key in keyToPrev) || keyToPrev[key].length === 0)
+      .map((s) => [s, true as const])
   );
-  const leafKeys = new Set(
-    allKeys.filter((key) => !(key in keyToNext) || keyToNext[key].length === 0)
+  const leafKeys = Object.fromEntries(
+    allKeys
+      .filter((key) => !(key in keyToNext) || keyToNext[key].length === 0)
+      .map((s) => [s, true as const])
   );
   return {
     textToKeys,
