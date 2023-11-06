@@ -152,7 +152,7 @@ function chunkInput(input, graph) {
       chunks.push({
         text: hit.result,
         status: "ok",
-        start: graph.ancestorKeys.has(hit.firstKey)
+        start: graph.ancestorKeys[hit.firstKey]
       });
       rest = rest.slice(hit.result.length);
     }
@@ -298,11 +298,11 @@ function sentenceToGraph(sentence) {
   const keyToNext = reverse(keyToPrev);
   const keyToText = reverseUniq(textToKeys);
   const allKeys = Object.keys(keyToText);
-  const ancestorKeys = new Set(
-    allKeys.filter((key) => !(key in keyToPrev) || keyToPrev[key].length === 0)
+  const ancestorKeys = Object.fromEntries(
+    allKeys.filter((key) => !(key in keyToPrev) || keyToPrev[key].length === 0).map((s) => [s, true])
   );
-  const leafKeys = new Set(
-    allKeys.filter((key) => !(key in keyToNext) || keyToNext[key].length === 0)
+  const leafKeys = Object.fromEntries(
+    allKeys.filter((key) => !(key in keyToNext) || keyToNext[key].length === 0).map((s) => [s, true])
   );
   return {
     textToKeys,
