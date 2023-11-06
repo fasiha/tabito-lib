@@ -1,6 +1,7 @@
 node_modules/
-./*.js
-./*.mjs
+/*.js
+/tests/*.js
+/*.mjs
 
 *.dot
 *.png
