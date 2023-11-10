@@ -28,6 +28,7 @@
   },
   "main": "dist/index.cjs",
   "module": "dist/index.min.mjs",
+  "types": "dist/index.ts",
   "exports": {
     ".": {
       "browser": "./dist/index.min.mjs",
@@ -35,9 +36,11 @@
         "import": "./dist/index.min.mjs",
         "require": "./dist/index.cjs"
       },
+      "types": "./index.ts",
       "import": "./dist/index.min.mjs"
     },
     "./package.json": "./package.json",
+    "./*.ts": "./*.ts",
     "./dist/*": "./dist/*"
   },
   "devDependencies": {
