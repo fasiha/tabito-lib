@@ -71,7 +71,7 @@ test("chunking", (t) => {
 
   const arrEqual = (a: string[], b: string[]) =>
     t.deepEqual(a.sort(), b.sort());
-  const allStatusOk = (v: Chunk[]) => v.every((o) => o.status === "ok");
+  const allStatusOk = (v: Chunk[]) => t.ok(v.every((o) => o.status === "ok"));
 
   let chunks = chunkInput("しゃしんたくさん", graph);
   allStatusOk(chunks);

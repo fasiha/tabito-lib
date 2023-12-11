@@ -152,7 +152,7 @@ function chunkInput(input, graph) {
       chunks.push({
         text: hit.result,
         status: "ok",
-        start: graph.ancestorKeys[hit.firstKey]
+        start: graph.ancestorKeys[hit.firstKey] || false
       });
       rest = rest.slice(hit.result.length);
     }

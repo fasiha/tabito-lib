@@ -1,6 +1,6 @@
 {
   "name": "tabito-lib",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Express a Japanese sentence with furigana and with synonyms, then match it against text input",
   "keywords": [
     "Japanese",
@@ -24,7 +24,8 @@
     "bundle": "npm run build && npm run build:browser && npm run build:cjs",
     "build:dev": "esbuild demo.ts --bundle --outdir=. --platform=node --format=cjs",
     "demo": "npm run build:dev && node demo.js",
-    "test": "npm run build:dev && esbuild tests/*.ts --outdir=tests --platform=node --format=cjs && tape 'tests/**/*js'"
+    "build:test": "npm run bundle && npm run build:dev && esbuild tests/*.ts --outdir=tests --platform=node --format=cjs",
+    "test": "npm run build:test && tape 'tests/**/*js'"
   },
   "main": "dist/index.cjs",
   "module": "dist/index.min.mjs",

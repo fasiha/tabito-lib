@@ -65,7 +65,7 @@ export function chunkInput(input: string, graph: Graph): Chunk[] {
       chunks.push({
         text: hit.result,
         status: "ok",
-        start: graph.ancestorKeys[hit.firstKey],
+        start: graph.ancestorKeys[hit.firstKey] || false,
       });
       rest = rest.slice(hit.result.length);
     }
