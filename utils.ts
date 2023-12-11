@@ -1,4 +1,4 @@
-import type { Tree } from "./interfaces";
+import type { Furigana, Tree } from "./interfaces";
 
 export function insert(
   db: Tree,
@@ -103,4 +103,36 @@ export function countElements<X>(xs: X[]): Map<X, number> {
     ret.set(x, (ret.get(x) ?? 0) + 1);
   }
   return ret;
+}
+
+export function furiganaEqual(a: Furigana, b: Furigana): boolean {
+  return (
+    typeof a === typeof b &&
+    (typeof a === "string"
+      ? a === b // a and b will both be strings here without any further runtime checks
+      : (a as Exclude<Furigana, string>).rt ===
+        (b as Exclude<Furigana, string>).rt)
+  );
+}
+
+export function furiganasToPlain(v: Furigana[]): string {
+  return v.map((x) => (typeof x === "string" ? x : x.ruby)).join("");
+}
+
+export function appearsExactlyOnce(haystack: string, needle: string): boolean {
+  const hit = haystack.indexOf(needle);
+  return hit >= 0 && haystack.indexOf(needle, hit + 1) < 0;
+}
+
+export function* zip<T, U>(ts: T[], us: U[]): IterableIterator<[T, U]> {
+  const smaller = Math.min(ts.length, us.length);
+  for (let idx = 0; idx < smaller; ++idx) {
+    yield [ts[idx], us[idx]];
+  }
+}
+
+export function* zipRight<T, U>(ts: T[], us: U[]): IterableIterator<[T, U]> {
+  for (let t = ts.length - 1, u = us.length - 1; t >= 0 && u >= 0; --t, --u) {
+    yield [ts[t], us[u]];
+  }
 }
