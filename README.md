@@ -15,7 +15,10 @@ In summary, your simple sentence is actually this directed acyclic graph (DAG):
 
 ![Graph (with nodes and edges) of the words of a Japanese sentence with forks for kanji-vs-kana and synonymous alternatives](./graph.svg)
 
-Tabito (<ruby>旅<rt>ta</rt></ruby><ruby>人<rt>bito</rt></ruby>, "travel person") is a dependency-free public-domain JavaScript/TypeScript library that helps with this. It exports two functions, `sentenceToGraph` and `chunkInput`, which constructs the graph above from a simpler editor-friendly representation and then break up user input into walks along the graph.
+Tabito (<ruby>旅<rt>ta</rt></ruby><ruby>人<rt>bito</rt></ruby>, "travel person") is a dependency-free public-domain JavaScript/TypeScript library that helps with this. It exports a few functions which are used to
+1. construct the graph above from a simpler editor-friendly representation (`sentenceToGraph`, see below),
+2. break up user input into walks along that graph (`chunkInput`, see below), and finally,
+3. a small utility that makes it easy to add "synonyms" (per this library's data model) given an equivalent sentence (`addSynonym`, see below).
 
 ## API
 
@@ -32,7 +35,7 @@ interface Sentence {
   synonyms?: [string, Furigana[]][];
 }
 ```
-The `furigana` array represents the raw text of the sentence, with optional readings (using the `<ruby>` and `<rt>` HTML tags for [Ruby characters](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ruby), which are easy to hand-write as well as obtain from dictionaries like [JmdictFurigana](https://github.com/Doublevil/JmdictFurigana)).
+The `furigana` array represents the raw text of the sentence, with optional readings (using the `<ruby>` and `<rt>` HTML tags for [Ruby characters](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ruby), which are easy to hand-write as well as obtain from dictionaries like [JmdictFurigana](https://github.com/Doublevil/JmdictFurigana); however it is expected that this array represents morphemes coming out of an NLP (natural language processing) system like MeCab or Kuromoji or Ichiran).
 
 The `synonyms` array lets you encode all the different grammatical variability discussed above—
 - "たくさん" → <ruby>沢<rt>たく</rt></ruby><ruby>山<rt>さん</rt></ruby>
@@ -120,6 +123,13 @@ console.log(chunkInput("京都でしゃしん撮った", graph));
 ]
 */
 ```
+
+### `function addSynonym(original: Sentence, syn: Furigana[]): Sentence`
+It can be error-prone to hand-construct an entry for the `synonyms` array described above under [`Sentence`](#sentence), and it can be much more ergonomic for a user to simply type an entire sentence and have the library figure out the entry in `synonyms`. This function does this.
+
+Given an existing `Sentence` object (with its array of `Furigana`, i.e., strings or `ruby`/`rt` pairs) and a synonymous sentence also broken up into an array of `Furigana`, this function carefully chips away at the start and endings of both original and synonymous sentence till it finds the bit that's differnt, and then appends a new entry to the input `Sentence` object.
+
+This function is pure, i.e., it doesn't modify the original input `Sentence` but returns a copy (though, if it didn't find any differences or if the difference was already in the `synonyms` array, it'll return the original input).
 
 ## Install and usage
 `npm install tabito-lib`

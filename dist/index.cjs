@@ -21,6 +21,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var tabito_lib_exports = {};
 __export(tabito_lib_exports, {
   _findGreedyPath: () => findGreedyPath,
+  addSynonym: () => addSynonym,
   chunkInput: () => chunkInput,
   sentenceToGraph: () => sentenceToGraph
 });
@@ -81,6 +82,27 @@ function longest(v) {
   if (v.length === 0)
     throw new Error("empty");
   return v.reduce((prev, curr) => curr.length > prev.length ? curr : prev);
+}
+function furiganaEqual(a, b) {
+  return typeof a === typeof b && (typeof a === "string" ? a === b : a.rt === b.rt);
+}
+function furiganasToPlain(v) {
+  return v.map((x) => typeof x === "string" ? x : x.ruby).join("");
+}
+function appearsExactlyOnce(haystack, needle) {
+  const hit = haystack.indexOf(needle);
+  return hit >= 0 && haystack.indexOf(needle, hit + 1) < 0;
+}
+function* zip(ts, us) {
+  const smaller = Math.min(ts.length, us.length);
+  for (let idx = 0; idx < smaller; ++idx) {
+    yield [ts[idx], us[idx]];
+  }
+}
+function* zipRight(ts, us) {
+  for (let t = ts.length - 1, u = us.length - 1; t >= 0 && u >= 0; --t, --u) {
+    yield [ts[t], us[u]];
+  }
 }
 
 // kana.ts
@@ -158,6 +180,58 @@ function chunkInput(input, graph) {
     }
   }
   return chunks;
+}
+
+// addSynonym.ts
+function addSynonym(original, syn) {
+  let orig = original.furigana;
+  const origPlain = furiganasToPlain(orig);
+  const synPlain = furiganasToPlain(syn);
+  let left = 0;
+  for (const [a, b] of zip(orig, syn)) {
+    if (furiganaEqual(a, b)) {
+      const origProposed = furiganasToPlain(orig.slice(left + 1));
+      const synProposed = furiganasToPlain(syn.slice(left + 1));
+      if (origProposed && synProposed && appearsExactlyOnce(origPlain, origProposed) && appearsExactlyOnce(synPlain, synProposed)) {
+        left++;
+      }
+    } else {
+      break;
+    }
+  }
+  orig = orig.slice(left);
+  syn = syn.slice(left);
+  let right = 0;
+  for (const [a, b] of zipRight(orig, syn)) {
+    if (furiganaEqual(a, b)) {
+      const origProposed = furiganasToPlain(orig.slice(0, right - 1));
+      const synProposed = furiganasToPlain(syn.slice(0, right - 1));
+      if (origProposed && synProposed && appearsExactlyOnce(origPlain, origProposed) && appearsExactlyOnce(synPlain, synProposed)) {
+        right--;
+      }
+    } else {
+      break;
+    }
+  }
+  orig = orig.slice(0, right || void 0);
+  syn = syn.slice(0, right || void 0);
+  const proposedOrigPlain = furiganasToPlain(orig);
+  const proposedSynFull = furiganasToFull(syn);
+  if (proposedSynFull === furiganasToFull(orig)) {
+    return original;
+  }
+  if (original.synonyms && original.synonyms.some(
+    ([plain, equiv]) => proposedSynFull === furiganasToFull(equiv) && proposedOrigPlain === plain
+  )) {
+    return original;
+  }
+  return {
+    ...original,
+    synonyms: (original.synonyms ?? []).concat([proposedOrigPlain, syn])
+  };
+}
+function furiganasToFull(v) {
+  return v.map((x) => typeof x === "string" ? x : `${x.rt}${x.ruby}`).join("");
 }
 
 // index.ts
