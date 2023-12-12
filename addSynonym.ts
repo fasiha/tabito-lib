@@ -77,7 +77,7 @@ export function addSynonym(original: Sentence, syn: Furigana[]): Sentence {
 
   return {
     ...original,
-    synonyms: (original.synonyms ?? []).concat([proposedOrigPlain, syn]),
+    synonyms: (original.synonyms ?? []).concat([[proposedOrigPlain, syn]]),
   };
 }
 

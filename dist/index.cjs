@@ -227,7 +227,7 @@ function addSynonym(original, syn) {
   }
   return {
     ...original,
-    synonyms: (original.synonyms ?? []).concat([proposedOrigPlain, syn])
+    synonyms: (original.synonyms ?? []).concat([[proposedOrigPlain, syn]])
   };
 }
 function furiganasToFull(v) {

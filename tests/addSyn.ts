@@ -1,30 +1,29 @@
 import test from "tape";
 import { addSynonym } from "..";
 
-test("basic", (t) => {
+test("synonyms", (t) => {
   t.deepEqual(
     addSynonym({ furigana: "abc".split("") }, "axyzc".split("")).synonyms,
-    ["b", "xyz".split("")]
+    [["b", "xyz".split("")]]
   );
 
   t.deepEqual(
     addSynonym({ furigana: "abc".split("") }, "abcd".split("")).synonyms,
-    ["c", "cd".split("")]
+    [["c", "cd".split("")]]
   );
 
   t.deepEqual(
     addSynonym({ furigana: "bc".split("") }, "abc".split("")).synonyms,
-    ["b", "ab".split("")]
+    [["b", "ab".split("")]]
   );
 
   t.deepEqual(addSynonym({ furigana: "a".split("") }, "x".split("")).synonyms, [
-    "a",
-    "x".split(""),
+    ["a", "x".split("")],
   ]);
 
   t.deepEqual(
     addSynonym({ furigana: "aa".split("") }, "a".split("")).synonyms,
-    ["aa", "a".split("")]
+    [["aa", "a".split("")]]
   );
 
   t.end();
