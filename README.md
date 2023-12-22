@@ -88,13 +88,16 @@ export interface Chunk {
   text: string;
   status: "unknown" | "ok";
   start: boolean;
+  full: boolean;
 }
 ``` 
 and each `Chunk` is guaranteed to contain consecutive substrings of the original input—that is, `chunks.map(c => c.text).join('') === input` is guaranteed to be true.
 
 Therefore, the `status` field of each `Chunk` tells you whether this chunk's text is *somewhere* in the graph (`ok`) or not (`unknown`).
 
-A given chunk's `text` will be the longest walk in the graph that can possibly be constructed. As a useful bonus, the `start` flag indicates whether this `Chunk` started at the ancestor node of the graph.
+A given chunk's `text` will be the longest walk in the graph that can possibly be constructed. As two useful bonuses:
+- the `start` flag indicates whether this `Chunk` started at the ancestor node of the graph, while
+- the `full` flag indicates whether this chunk represents input which walks the graph from an ancestor node to a leaf node, i.e., if it's a *full* sentence—quiz apps may use this to know when the student has finished typing.
 
 Consider the following examples to illustrate the above points:
 ```ts

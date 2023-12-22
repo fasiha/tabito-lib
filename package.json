@@ -1,6 +1,6 @@
 {
   "name": "tabito-lib",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Express a Japanese sentence with furigana and with synonyms, then match it against text input",
   "keywords": [
     "Japanese",

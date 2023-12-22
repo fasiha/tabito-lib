@@ -118,3 +118,37 @@ test("chunking with duplicate synonyms", (t) => {
 
   t.end();
 });
+
+test("full", (t) => {
+  const sentence: Sentence = {
+    furigana: "abc".split(""),
+    synonyms: [
+      ["b", ["x"]],
+      ["b", ["y"]],
+      ["b", ["z"]],
+    ],
+  };
+  const graph = sentenceToGraph(sentence);
+  // FULL
+  for (const input of "abc,axc,ayc,azc".split(",")) {
+    const chunks = chunkInput(input, graph);
+    t.ok(chunks.length === 1 && chunks[0].start && chunks[0].full);
+  }
+  // start but NOT full
+  for (const input of "ab,ax,ay,az,a".split(",")) {
+    const chunks = chunkInput(input, graph);
+    t.ok(chunks.length === 1 && chunks[0].start && !chunks[0].full);
+  }
+  // neither start nor full
+  for (const input of "b,x,y,z,c,bc,xc,yc,zc".split(",")) {
+    const chunks = chunkInput(input, graph);
+    t.ok(chunks.length === 1 && !chunks[0].start && !chunks[0].full);
+  }
+  // just… not full
+  for (const input of "cba,cab,bac,bca,cxa".split(",")) {
+    const chunks = chunkInput(input, graph);
+    t.ok(!chunks[0].full);
+  }
+
+  t.end();
+});

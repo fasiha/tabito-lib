@@ -75,11 +75,6 @@ export function max<T>(v: T[], map: (x: T) => number): T {
   return bestX;
 }
 
-export function longest(v: string[]): string {
-  if (v.length === 0) throw new Error("empty");
-  return v.reduce((prev, curr) => (curr.length > prev.length ? curr : prev));
-}
-
 export function groupBy<X, Y extends number | string>(
   xs: X[],
   f: (x: X) => Y

@@ -78,11 +78,6 @@ function max(v, map) {
   }
   return bestX;
 }
-function longest(v) {
-  if (v.length === 0)
-    throw new Error("empty");
-  return v.reduce((prev, curr) => curr.length > prev.length ? curr : prev);
-}
 function furiganaEqual(a, b) {
   return typeof a === typeof b && (typeof a === "string" ? a === b : a.rt === b.rt);
 }
@@ -137,14 +132,20 @@ function findGreedyPath(input, graph) {
   const inputHiragana = kata2hira(input);
   const heads = findMatchingWords(inputHiragana, graph) ?? [];
   const keys = heads.flatMap((word) => graph.textToKeys[word]) ?? [];
-  return keys.map((key) => ({
-    firstKey: key,
-    result: followGreedy(input, key, graph)
-  }));
+  return keys.map((key) => {
+    const result = followGreedy(input, key, graph);
+    return {
+      result: result.text,
+      start: graph.ancestorKeys[key] || false,
+      // first key is a root node?
+      end: !!result.end
+      // last key was a leaf node?
+    };
+  });
 }
 function followGreedy(input, startKey, graph) {
   if (!input)
-    return input;
+    return { text: input };
   const { keyToNext, keyToText } = graph;
   const head = keyToText[startKey];
   const headHiragana = kata2hira(head);
@@ -155,11 +156,13 @@ function followGreedy(input, startKey, graph) {
     (key) => inputHiragana.startsWith(headHiragana + kata2hira(keyToText[key]))
   ) ?? [];
   const headAsInput = input.slice(0, head.length);
-  if (nextKeys.length === 0)
-    return headAsInput;
+  if (nextKeys.length === 0) {
+    return { text: headAsInput, end: !!graph.leafKeys[startKey] };
+  }
   const rest = input.slice(head.length);
   const downstream = nextKeys.map((key) => followGreedy(rest, key, graph));
-  return headAsInput + longest(downstream);
+  const best = max(downstream, (x) => x.text.length);
+  return { text: headAsInput + best.text, end: best.end };
 }
 function chunkInput(input, graph) {
   const chunks = [];
@@ -167,14 +170,20 @@ function chunkInput(input, graph) {
   while (rest) {
     const hits = findGreedyPath(rest, graph);
     if (hits.length === 0) {
-      chunks.push({ text: rest[0], status: "unknown", start: false });
+      chunks.push({
+        text: rest[0],
+        status: "unknown",
+        start: false,
+        full: false
+      });
       rest = rest.slice(1);
     } else {
       const hit = max(hits, (h) => h.result.length);
       chunks.push({
         text: hit.result,
         status: "ok",
-        start: graph.ancestorKeys[hit.firstKey] || false
+        start: hit.start,
+        full: hit.start && hit.end
       });
       rest = rest.slice(hit.result.length);
     }

@@ -26,4 +26,5 @@ export interface Chunk {
   text: string;
   status: "unknown" | "ok";
   start: boolean;
+  full: boolean;
 }
