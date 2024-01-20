@@ -54,8 +54,8 @@ export const demo: Sentence = {
     ["まし"],
     ["た"],
   ].flat(),
-  english: ["In Kyoto, I took a lot of photos"],
-  citation: "Genki 2, 15-IV",
+  // english: ["In Kyoto, I took a lot of photos"],
+  // citation: "Genki 2, 15-IV",
   synonyms: [
     [
       "たくさん",
@@ -125,11 +125,11 @@ if (module === require.main) {
       ],
       ["です"],
     ].flat(),
-    english: [
-      "This is the Japanese inn that my older brother made a reservation at",
-    ],
-    citation:
-      "My answer to Genki II Workbook, Lesson 15, Topic 4, section II, question 1",
+    // english: [
+    //   "This is the Japanese inn that my older brother made a reservation at",
+    // ],
+    // citation:
+    //   "My answer to Genki II Workbook, Lesson 15, Topic 4, section II, question 1",
   };
   console.log(sentenceToGraph(ex));
 }

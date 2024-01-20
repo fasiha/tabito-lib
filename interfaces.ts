@@ -6,9 +6,6 @@ export interface Sentence {
   // tuple's first element must be in `furigana` (string or `ruby`) along element boundaries.
   // Entries of the 2nd (array) may be empty string
   synonyms?: [string, Furigana[]][];
-
-  english?: string[];
-  citation?: string;
 }
 
 export type Tree = Record<string, string[]>;

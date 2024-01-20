@@ -154,3 +154,13 @@ To develop this repo, make sure you have [Git](https://git-scm.com) and [Node.js
    1. Of course plain `npm` will also work: `npm install`
 4. run tests: `npm t` (npm comes with Node.js too, this runs the `script` named `"test"` in [`package.json`](./package.json))
 5. run the demo: `npm run demo` (if you have Graphviz installed, (via Homebrew, Conda, etc.), i.e., if you have the `dot` command available, this will make a couple of pretty images)
+
+## Changelog
+
+### 1.1
+
+Remove the `english` and `citation` fields in our `Sentence` type since they're out-of-scope. Recommended! But out of scope of this library.
+
+### 1.0.7
+
+Basic working library.
