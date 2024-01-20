@@ -86,5 +86,6 @@ document.querySelector("input#answer").addEventListener("input", (e) => {
     </span>`
     )
     .join("");
-  document.querySelector("div#output").innerHTML = html;
+  document.querySelector("div#output").innerHTML =
+    html || `<span class="chunk">Matches will go here</span>`;
 });
