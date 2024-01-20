@@ -20,6 +20,8 @@ Tabito (<ruby>旅<rt>ta</rt></ruby><ruby>人<rt>bito</rt></ruby>, "travel person
 2. break up user input into walks along that graph (`chunkInput`, see below), and finally,
 3. a small utility that makes it easy to add "synonyms" (per this library's data model) given an equivalent sentence (`addSynonym`, see below).
 
+**Demo app** To get a feeling for how the library works, play with the demo app at https://fasiha.github.io/tabito-lib/
+
 ## API
 
 ### `Sentence`
