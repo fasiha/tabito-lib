@@ -20,7 +20,7 @@
     "clean": "rm -f tests/*.js *.js",
     "build": "esbuild index.ts --outfile=dist/index.min.mjs --bundle --sourcemap --minify --format=esm",
     "build:cjs": "esbuild index.ts --outfile=dist/index.cjs --bundle --format=cjs",
-    "build:browser": "esbuild index.ts --outfile=dist/tabito.min.js --bundle --sourcemap --minify --format=iife --global-name=tabito",
+    "build:browser": "esbuild index.ts --outfile=dist/tabito.min.js --bundle --sourcemap --minify --format=iife --global-name=tabito && cp dist/tabito.min.js* docs",
     "bundle": "npm run build && npm run build:browser && npm run build:cjs",
     "build:dev": "esbuild demo.ts --bundle --outdir=. --platform=node --format=cjs",
     "demo": "npm run build:dev && node demo.js",

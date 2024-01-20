@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏖️</text></svg>"
+    />
+    <meta name="viewport" content="width=device-width" />
+    <title>Tabito Demo</title>
+    <style>
+      /* from https://perfectmotherfuckingwebsite.com */
+      body {
+        max-width: 650px;
+        margin: 40px auto;
+        padding: 0 10px;
+        font: 18px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+          "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        color: #444;
+      }
+      h1,
+      h2,
+      h3 {
+        line-height: 1.2;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          color: #c9d1d9;
+          background: #0d1117;
+        }
+        a:link {
+          color: #58a6ff;
+        }
+        a:visited {
+          color: #8e96f0;
+        }
+      }
+    </style>
+    <style>
+      .centered {
+        text-align: center;
+      }
+      .chunk {
+        border: 1px yellow solid;
+        border-radius: 0.3rem;
+        margin-right: 0.2rem;
+        padding: 0.2rem;
+      }
+
+      .start-chunk {
+        background-color: green;
+      }
+
+      .unknown-chunk {
+        background-color: brown;
+      }
+
+      @keyframes rainbowBackground {
+        0% {
+          background-color: red;
+        }
+        14% {
+          background-color: orange;
+        }
+        28% {
+          background-color: yellow;
+        }
+        42% {
+          background-color: green;
+        }
+        57% {
+          background-color: blue;
+        }
+        71% {
+          background-color: indigo;
+        }
+        85% {
+          background-color: violet;
+        }
+        100% {
+          background-color: red;
+        }
+      }
+      .full-chunk {
+        animation: rainbowBackground 5s linear infinite;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* black shadow for light text */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tabito</h1>
+    <p>
+      Here's a sentence that means “In Kyoto, I took a lot of photos” (<cite
+        >Genki II</cite
+      >, 15-IV):
+    </p>
+    <p>
+      <ruby>京<rt>きょう</rt></ruby
+      ><ruby>都<rt>と</rt></ruby
+      >でたくさん<ruby>写<rt>しゃ</rt></ruby
+      ><ruby>真<rt>しん</rt></ruby
+      >を<ruby>撮<rt>と</rt></ruby
+      >りました
+    </p>
+    <p>
+      If you had a flashcard app that presented you with this English
+      translation and asked you to produce the Japanese, there’s a few
+      variations you’d want to be able to handle:
+    </p>
+    <ul>
+      <li>
+        "たくさん" ("lots") can function as an adverb so you want to allow:
+        <ruby>京<rt>きょう</rt></ruby
+        ><ruby>都<rt>と</rt></ruby
+        >で<ruby>写<rt>しゃ</rt></ruby
+        ><ruby>真<rt>しん</rt></ruby
+        >をたくさん<ruby>撮<rt>と</rt></ruby
+        >りました
+      </li>
+      <li>
+        Of course you want to allow the informal conjugation of
+        <ruby>撮<rt>と</rt></ruby
+        >りました, so: <ruby>撮<rt>と</rt></ruby
+        >った
+      </li>
+      <li>
+        Oh, sometimes IME will convert たくさん to kanji:
+        <ruby>沢<rt>たく</rt></ruby
+        ><ruby>山<rt>さん</rt></ruby>
+      </li>
+      <li>And in fact you want to allow any combination of kanji and kana.</li>
+      <li>
+        By the way, you'll want to treat hiragana and katakana as equivalent
+        (again, IME).
+      </li>
+    </ul>
+    <p>
+      <a href="https://github.com/fasiha/tabito-lib">Tabito</a> is a small
+      TypeScript app that lets you specify the variations of the sentence you
+      want to allow and then to match user input to this. Try it below! Type
+      various parts of the sentence above with the variations described and see
+      how close you get.
+    </p>
+    <p class="centered">
+      <input type="text" placeholder="Type answer here" id="answer" />
+    </p>
+    <div class="centered" id="output">
+      <span class="chunk">Matches will go here</span>
+    </div>
+  </body>
+  <script src="tabito.min.js"></script>
+  <script src="index.js"></script>
+</html>
