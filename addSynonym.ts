@@ -7,6 +7,9 @@ import {
   zipRight,
 } from "./utils";
 
+/**
+ * Create a new sentence object given a synonymous sentence in furigana
+ */
 export function addSynonym(original: Sentence, syn: Furigana[]): Sentence {
   let orig = original.furigana;
   const origPlain = furiganasToPlain(orig);

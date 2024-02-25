@@ -162,6 +162,9 @@ function insertFurigana({
   return keysGenerated;
 }
 
+/**
+ * Convert a sentence to a graph we can use to parse user input
+ */
 export function sentenceToGraph(sentence: Sentence): Graph {
   if (!validateSynonyms(sentence)) {
     throw new Error("Invalid synonyms");
@@ -210,4 +213,5 @@ export function sentenceToGraph(sentence: Sentence): Graph {
 
 export { chunkInput, findGreedyPath as _findGreedyPath } from "./graphSearch";
 export * from "./addSynonym";
+export * from "./enumerateAcceptable";
 export type * from "./interfaces";

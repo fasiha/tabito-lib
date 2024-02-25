@@ -23,6 +23,7 @@ __export(tabito_lib_exports, {
   _findGreedyPath: () => findGreedyPath,
   addSynonym: () => addSynonym,
   chunkInput: () => chunkInput,
+  enumerateAcceptable: () => enumerateAcceptable,
   sentenceToGraph: () => sentenceToGraph
 });
 module.exports = __toCommonJS(tabito_lib_exports);
@@ -241,6 +242,44 @@ function addSynonym(original, syn) {
 }
 function furiganasToFull(v) {
   return v.map((x) => typeof x === "string" ? x : `${x.rt}${x.ruby}`).join("");
+}
+
+// enumerateAcceptable.ts
+function enumerateAcceptable(sentence) {
+  const ret = [sentence.furigana];
+  if (!sentence.synonyms || sentence.synonyms.length === 0) {
+    return ret;
+  }
+  const charToFuri = [];
+  for (const f of sentence.furigana) {
+    charToFuri.push(f);
+    const remaining = (typeof f === "string" ? f.length : f.ruby.length) - 1;
+    if (remaining >= 1) {
+      charToFuri.push(...Array(remaining).fill(void 0));
+    }
+  }
+  const plain = furiganasToPlain(sentence.furigana);
+  for (const [orig, synFuri] of sentence.synonyms) {
+    const hits = findAllMatches(plain, orig);
+    for (const hit of hits) {
+      const copy = charToFuri.slice();
+      copy.splice(hit, orig.length, ...synFuri);
+      ret.push(copy.filter((x) => !!x));
+    }
+  }
+  return ret;
+}
+function findAllMatches(big, small) {
+  const hits = [];
+  let hit = 0;
+  while (hit >= 0) {
+    hit = big.indexOf(small, hit);
+    if (hit >= 0) {
+      hits.push(hit);
+      hit += small.length;
+    }
+  }
+  return hits;
 }
 
 // index.ts

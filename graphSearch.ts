@@ -63,6 +63,9 @@ function followGreedy(
   return { text: headAsInput + best.text, end: best.end };
 }
 
+/**
+ * Analyze user input against a sentence graph
+ */
 export function chunkInput(input: string, graph: Graph): Chunk[] {
   const chunks: Chunk[] = [];
   let rest = input;
