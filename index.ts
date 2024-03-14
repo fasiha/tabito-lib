@@ -4,7 +4,7 @@ import { findOccurrences, insert, reverse, reverseUniq } from "./utils";
 /**
  * Ensures all synonyms are present and along furigana boundaries
  */
-function validateSynonyms(sentence: Sentence): boolean {
+export function validateSynonyms(sentence: Sentence): boolean {
   const rawRubies = sentence.furigana.map((f) =>
     typeof f === "string" ? f : f.ruby
   );

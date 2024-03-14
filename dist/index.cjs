@@ -24,7 +24,8 @@ __export(tabito_lib_exports, {
   addSynonym: () => addSynonym,
   chunkInput: () => chunkInput,
   enumerateAcceptable: () => enumerateAcceptable,
-  sentenceToGraph: () => sentenceToGraph
+  sentenceToGraph: () => sentenceToGraph,
+  validateSynonyms: () => validateSynonyms
 });
 module.exports = __toCommonJS(tabito_lib_exports);
 

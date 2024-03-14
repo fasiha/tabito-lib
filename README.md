@@ -139,6 +139,9 @@ This function is pure, i.e., it doesn't modify the original input `Sentence` but
 ### `function enumerateAcceptable(sentence: Sentence): Furigana[][]`
 The second utility function generates a list of acceptable sentences, intended for human consumption—an app might use the output to show users what sentences it'll accept. Because it's intended for humans, the returned list doesn't reflect hiragana/katanana equivalence or kanji-versus-reading.
 
+### `function validateSynonyms(sentence: Sentence): boolean`
+This is a small third utility function that can be used to verify that the `synonyms` in the input are valid, i.e., they lie on `furigana` boundaries.
+
 ## Install and usage
 `npm install tabito-lib`
 
@@ -161,6 +164,10 @@ To develop this repo, make sure you have [Git](https://git-scm.com) and [Node.js
 5. run the demo: `npm run demo` (if you have Graphviz installed, (via Homebrew, Conda, etc.), i.e., if you have the `dot` command available, this will make a couple of pretty images)
 
 ## Changelog
+
+### 1.3
+
+Export `validateSynonyms` because this can be useful too, and isn't quite trivial to implement yourself.
 
 ### 1.2
 
